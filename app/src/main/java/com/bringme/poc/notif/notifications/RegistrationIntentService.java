@@ -1,4 +1,4 @@
-package com.example.microsoft.getstarted;
+package com.bringme.poc.notif.notifications;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -6,6 +6,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.bringme.poc.notif.MainActivity;
+import com.bringme.poc.notif.notifications.settings.NotificationSettings;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.google.android.gms.iid.InstanceID;
 import com.microsoft.windowsazure.messaging.NotificationHub;

@@ -7,27 +7,28 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.example.microsoft.getstarted.MainActivity">
+    tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/text_hello"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/text_hello"
+        android:layout_centerHorizontal="true"
         android:text="Hello World!" />
 
     <Button
+        android:id="@+id/sendbutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/send_button"
-        android:id="@+id/sendbutton"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:onClick="sendNotificationButtonOnClick" />
+        android:layout_centerVertical="true"
+        android:onClick="sendNotificationButtonOnClick"
+        android:text="@string/send_button" />
 
     <EditText
+        android:id="@+id/editTextNotificationMessage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/editTextNotificationMessage"
         android:layout_above="@+id/sendbutton"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="42dp"

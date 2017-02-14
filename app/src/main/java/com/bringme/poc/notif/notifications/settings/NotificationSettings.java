@@ -1,4 +1,4 @@
-package com.example.microsoft.getstarted;
+package com.bringme.poc.notif.notifications.settings;
 
 public class NotificationSettings {
 

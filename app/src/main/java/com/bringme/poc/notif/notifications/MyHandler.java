@@ -1,4 +1,4 @@
-package com.example.microsoft.getstarted;
+package com.bringme.poc.notif.notifications;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
+import com.bringme.poc.notif.MainActivity;
+import com.bringme.poc.notif.R;
 import com.microsoft.windowsazure.notifications.NotificationsHandler;
 
 public class MyHandler extends NotificationsHandler {

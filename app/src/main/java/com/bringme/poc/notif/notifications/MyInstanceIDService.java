@@ -1,4 +1,4 @@
-package com.example.microsoft.getstarted;
+package com.bringme.poc.notif.notifications;
 
 /**
  * Created by Wesley on 4/7/2016.

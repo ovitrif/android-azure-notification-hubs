@@ -1,4 +1,4 @@
-package com.example.microsoft.getstarted;
+package com.bringme.poc.notif;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bringme.poc.notif.notifications.MyHandler;
+import com.bringme.poc.notif.notifications.settings.NotificationSettings;
+import com.bringme.poc.notif.notifications.RegistrationIntentService;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;

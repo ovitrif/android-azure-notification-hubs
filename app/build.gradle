@@ -7,7 +7,7 @@ android {
     buildToolsVersion "25.0.2"
 
     defaultConfig {
-        applicationId "com.bringme.notif"
+        applicationId "com.bringme.poc.notif"
         minSdkVersion 21
         targetSdkVersion 25
         versionCode 1
