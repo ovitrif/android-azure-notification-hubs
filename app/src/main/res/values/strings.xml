@@ -2,4 +2,6 @@
     <string name="app_name">GetStarted</string>
     <string name="send_button">Send Notification</string>
     <string name="notification_message_hint">Enter notification message text</string>
+    <string name="not_supported">This device is not supported by Google Play Services.</string>
+    <string name="notification_title">Notification Hub Demo</string>
 </resources>

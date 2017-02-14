@@ -1,11 +1,9 @@
 package com.example.microsoft.getstarted;
 
-/**
- * Created by Wesley on 4/11/2016.
- */
 public class NotificationSettings {
-    public static String SenderId = "<your project number>";
-    public static String HubName = "<your hub name>";
-    public static String HubListenConnectionString = "< your DefaultListenSharedAccessSignature>";
-    public static String HubFullAccess = "<your DefaultFullSharedAccessSignature>";    
+
+    public static String SENDER_ID = "<your project number>";
+    public static String HUB_NAME = "<your hub name>";
+    public static String HUB_LISTEN_CONNECTION_STRING = "<your DefaultListenSharedAccessSignature>";
+    public static String HUB_FULL_ACCESS = "<your DefaultFullSharedAccessSignature>";
 }

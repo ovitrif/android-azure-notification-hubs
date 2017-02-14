@@ -1,16 +1,19 @@
 package com.example.microsoft.getstarted;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Base64;
+import android.util.Log;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.gcm.*;
+import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.microsoft.windowsazure.notifications.NotificationsManager;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
@@ -19,11 +22,9 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+
 import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
-import android.util.Base64;
-import android.view.View;
-import android.widget.EditText;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -34,10 +35,10 @@ public class MainActivity extends AppCompatActivity {
     private static final int PLAY_SERVICES_RESOLUTION_REQUEST = 9000;
     public static Boolean isVisible = false;
     private static final String TAG = "MainActivity";
-    
+
     private String HubEndpoint = null;
     private String HubSasKeyName = null;
-    private String HubSasKeyValue = null;   
+    private String HubSasKeyValue = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         mainActivity = this;
-        NotificationsManager.handleNotifications(this, NotificationSettings.SenderId, MyHandler.class);
+        NotificationsManager.handleNotifications(this, NotificationSettings.SENDER_ID, MyHandler.class);
         registerWithNotificationHubs();
     }
 
@@ -68,17 +69,22 @@ public class MainActivity extends AppCompatActivity {
     private boolean checkPlayServices() {
         GoogleApiAvailability apiAvailability = GoogleApiAvailability.getInstance();
         int resultCode = apiAvailability.isGooglePlayServicesAvailable(this);
+
         if (resultCode != ConnectionResult.SUCCESS) {
             if (apiAvailability.isUserResolvableError(resultCode)) {
-                apiAvailability.getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
+                apiAvailability
+                        .getErrorDialog(this, resultCode, PLAY_SERVICES_RESOLUTION_REQUEST)
                         .show();
             } else {
-                Log.i(TAG, "This device is not supported by Google Play Services.");
-                ToastNotify("This device is not supported by Google Play Services.");
+                String notSupportedError = getString(R.string.not_supported);
+
+                Log.i(TAG, notSupportedError);
+                ToastNotify(notSupportedError);
                 finish();
             }
             return false;
         }
+
         return true;
     }
 
@@ -90,22 +96,28 @@ public class MainActivity extends AppCompatActivity {
      * @param connectionString This must be the DefaultFullSharedAccess connection
      *                         string for this example.
      */
-    private void ParseConnectionString(String connectionString)
-    {
+    private void ParseConnectionString(String connectionString) {
         String[] parts = connectionString.split(";");
+
         if (parts.length != 3)
             throw new RuntimeException("Error parsing connection string: "
                     + connectionString);
 
-        for (int i = 0; i < parts.length; i++) {
-            if (parts[i].startsWith("Endpoint")) {
-                this.HubEndpoint = "https" + parts[i].substring(11);
-            } else if (parts[i].startsWith("SharedAccessKeyName")) {
-                this.HubSasKeyName = parts[i].substring(20);
-            } else if (parts[i].startsWith("SharedAccessKey")) {
-                this.HubSasKeyValue = parts[i].substring(16);
+        for (String part : parts) {
+            if (part.startsWith("Endpoint"))
+            {
+                this.HubEndpoint = "https" + part.substring(11);
+            }
+            else if (part.startsWith("SharedAccessKeyName"))
+            {
+                this.HubSasKeyName = part.substring(20);
+            }
+            else if (part.startsWith("SharedAccessKey"))
+            {
+                this.HubSasKeyValue = part.substring(16);
             }
         }
+
     }
 
     /**
@@ -123,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
         String token = null;
         try {
             targetUri = URLEncoder
-                    .encode(uri.toString().toLowerCase(), "UTF-8")
+                    .encode(uri.toLowerCase(), "UTF-8")
                     .toLowerCase();
 
             long expiresOnDate = System.currentTimeMillis();
@@ -146,14 +158,17 @@ public class MainActivity extends AppCompatActivity {
             // Using android.util.Base64 for Android Studio instead of
             // Apache commons codec
             String signature = URLEncoder.encode(
-                    Base64.encodeToString(rawHmac, Base64.NO_WRAP).toString(), "UTF-8");
+                    Base64.encodeToString(rawHmac, Base64.NO_WRAP), "UTF-8");
 
             // Construct authorization string
-            token = "SharedAccessSignature sr=" + targetUri + "&sig="
-                    + signature + "&se=" + expires + "&skn=" + HubSasKeyName;
+            token = "SharedAccessSignature sr=" +
+                    targetUri +
+                    "&sig=" + signature +
+                    "&se=" + expires +
+                    "&skn=" + HubSasKeyName;
         } catch (Exception e) {
             if (isVisible) {
-                ToastNotify("Exception Generating SaS : " + e.getMessage().toString());
+                ToastNotify("Exception Generating SaS : " + e.getMessage());
             }
         }
 
@@ -166,8 +181,6 @@ public class MainActivity extends AppCompatActivity {
      * token is added to the Authorization header on the POST request to the
      * notification hub. The text in the editTextNotificationMessage control
      * is added as the JSON body for the request to add a GCM message to the hub.
-     *
-     * @param v
      */
     public void sendNotificationButtonOnClick(View v) {
         EditText notificationText = (EditText) findViewById(R.id.editTextNotificationMessage);
@@ -181,8 +194,8 @@ public class MainActivity extends AppCompatActivity {
                 {
                     // Based on reference documentation...
                     // http://msdn.microsoft.com/library/azure/dn223273.aspx
-                    ParseConnectionString(NotificationSettings.HubFullAccess);
-                    URL url = new URL(HubEndpoint + NotificationSettings.HubName +
+                    ParseConnectionString(NotificationSettings.HUB_FULL_ACCESS);
+                    URL url = new URL(HubEndpoint + NotificationSettings.HUB_NAME +
                             "/messages/?api-version=2015-01");
 
                     HttpURLConnection urlConnection = (HttpURLConnection)url.openConnection();
@@ -231,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
                 catch(Exception e)
                 {
                     if (isVisible) {
-                        ToastNotify("Exception Sending Notification : " + e.getMessage().toString());
+                        ToastNotify("Exception Sending Notification : " + e.getMessage());
                     }
                 }
             }
